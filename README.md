@@ -29,6 +29,6 @@ If you have an installation of MQTT and influxdb, you can run the script [main.p
 Currently there are this clients : 
 - **[Wizard](clients/Wizard)** : a tkinter based interface to easily login to a project, take screenshots, send files to the project repo, this is aim to help adding CAD files, save setups, keep track of every activity of a project which is done on a desktop PC. >
 
-- **[SatanicBot](clients/SatanicBot)** : Alphabot1, Kevin's repo for his advances on robot displacement on a table
+- **[SatanicBot](clients/bots/SatanicBot)** : Alphabot1, Kevin's repo for his advances on robot displacement on a table
 
-- **[Marcello](clients/Marcello)** : Alphabot2, Clara's repo for her advances on gesture based interaction with the table robot
+- **[Marcello](clients/bots/Marcello)** : Alphabot2, Clara's repo for her advances on gesture based interaction with the table robot

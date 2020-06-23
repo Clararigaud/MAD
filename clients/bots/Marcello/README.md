@@ -11,4 +11,5 @@ sudo apt-get install python-smbus
 sudo apt-get install python-serial
 sudo pip install rpi_ws281x
 sudo apt-get install libjpeg8-dev
+Picamera
 ```

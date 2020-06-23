@@ -96,6 +96,10 @@ class AlphaBot2(object):
 			GPIO.output(self.BIN2,GPIO.HIGH)
 			self.PWMB.ChangeDutyCycle(0 - left)
 
+	def lookAt(self, theta, phi):
+		pass
+
+
 if __name__=='__main__':
 
 	Ab = AlphaBot2()
