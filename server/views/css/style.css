@@ -1,0 +1,13 @@
+*{
+	font-family: 'helvetica neue';
+}
+
+.main_content{
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+.list_elem{
+	padding: 10px;
+	border-bottom: 1px solid #555;
+}

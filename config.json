@@ -1,5 +1,5 @@
 [
-	{"bottle-server-address" : "192.168.0.19",
+	{"bottle-server-address" : "192.168.1.45",
 	"bottle-server-port" : 8081,
 	"mosquitto-server-address" : "192.168.0.19",
 	"mosquitto-server-port" : 1884,

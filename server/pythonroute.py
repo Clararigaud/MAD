@@ -1,62 +1,67 @@
-from bottle import route, get, post, run, template, static_file, request
-import os
+from bottle import route, get, post, run, template, static_file, request, error, view
 import json
-import dbClient
+import controller
+from datetime import datetime
 
-@get('/mad/api/')
-@get('/mad/api')
-@get('/mad/api/')
-@get('/mad/api/<path:path>')
-def apiRoute(path=None):
-    return static_file('views/soon.html' , root="")
 
-@get('/mad/manager')
-@get('/mad/manager/')
-def managerRoute():
-    return static_file('views/soon.html' , root="")
+@get('/sudoc')
+@get('/sudoc/')
+@get('/sudoc/projects')
+@view("projects_page.tpl")  
+def projects_page() :
+    return {"projects":sudoc.getProjects(user_id = None)}
 
-@get('/mad/')
-@get('/')
-@get('/mad')
-def home():
-    return static_file('views/home.html' , root="")
+@get('/sudoc/project')
+@view("project_page.tpl")  
+def projectsRoute():
+    projectid = request.params.id
+    entries = True
+    res = sudoc.getProject(projectid, entries = entries)
+    return {"project":res}
 
-@get('/mad/postpage')
-def test():
-    return static_file('views/uploadimg.html' , root="")
+@error(404)
+def error404(error):
+    return 'Nothing here, sorry'
 
-@route('/mad/data', method='POST')
-@route('/mad/post', method='POST')
+@get('/sudoc/repository/<filepath:path>')
+def sendRepositoryFile(filepath=None):
+    # just sending back local files for now
+    if(filepath) :
+        return static_file(filepath , root=sudoc.getRepoUrl())
+    else:
+        return static_file('404.html' , root="views")
+
+@get('/sudoc/css/<filepath:path>')
+def sendCss(filepath):
+    return static_file(filepath , root='views/css/')
+
+#http requests handlers V V V
+@post('/sudoc/postentry')
 def uploadFileToProject():
     projectid   = request.forms.get('projectid')
-    upload     = request.files.get('upload')
-    name, ext = os.path.splitext(upload.filename)
-    db = dbClient.MAD_db()
-    projectpath = db.getProjectPath(projectid)
-    db.close()
-    if ext in ('.png','.jpg','.jpeg', '.bmp', '.tif'):
-        upload.save("projects/%s"%(projectpath)) # appends upload.filename automatically
-    elif ext in ('.3gp','.m4a','.aac', '.aiff', '.flac', '.mp3', '.wav'):   
-        upload.save("projects/%s"%(projectpath))
-    elif ext in ('.stl','.obj','.fbx', '.dae', '.3ds', '.iges', '.step'):   
-        upload.save("projects/%s"%(projectpath))
-    else : 
-        return 'File extension not allowed.'
-    return 'Saved image named :' + upload.filename + 'in project :' + projectpath
+    data     = request.files.get('files')
+    now = datetime.now()
+    time_start = now.strftime("%m/%d/%Y, %H:%M:%S")
+    time_end = now.strftime("%m/%d/%Y, %H:%M:%S")
+    res = sudoc.addEntry(projectid, time_start, time_end, data)
+    return json.dumps(res)
 
-@get('/mad/getdata')
-def sendData():
-    db = dbClient.MAD_db()
-    res = None
-    dataRequested = request.forms.get('request')
-    if dataRequested == 'projects' : 
-        res = db.getProjects()
+@get('/sudoc/getprojects') #TODO add selectors / criteria : user, machine, tool, espace, state / lastupdated, last created / limnumber 
+def sendProjects():
+    user_id = request.forms.get('user_id')
+    res = sudoc.getProjects(user_id = user_id)
+    return json.dumps(res)
 
-    db.close()
-    return res
+@get('/sudoc/getproject')
+def sendProject():
+    projectid = request.params.id
+    entries = request.params.entries
+    res = sudoc.getProject(projectid, entries = entries)
+    return json.dumps(res)
         
 with open('../config.json') as json_file:
     data = json.load(json_file)
     server_port = data[0]['bottle-server-port']
+    sudoc = controller.SuDoc()
 
 run(host='0.0.0.0', port=server_port)

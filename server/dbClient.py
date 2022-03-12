@@ -1,6 +1,5 @@
 import sqlite3
 from datetime import datetime
-import json
 
 class MAD_db():
 	def __init__(self):
@@ -11,11 +10,11 @@ class MAD_db():
 	def close(self):
 		self.conn.close()
 
-	def createProject(self, project_name, project_userIds, project_repo = None ): #repo type : ( we souhld ultimately be able to access git style repos)
+	def createProject(self, project_name, project_userIds, project_type, project_url = None): #repo type : ( we souhld ultimately be able to access git style repos)
+		project_repo = "project_name" # then create git rpos
+		project_state = 1 #state=1 for "en cours"
 		now = datetime.now()
-		req = 'INSERT INTO projects(name,datecreated,repo) VALUES(\'%s\',\'%s\',\'%s\')'%(project_name, now.strftime("%m/%d/%Y, %H:%M:%S"), project_repo)
-
-		print(req)
+		req = 'INSERT INTO projets(name,datecreated, dateupdated, repo, projecturl, type, state) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\')'%(project_name, now.strftime("%m/%d/%Y, %H:%M:%S"),now.strftime("%m/%d/%Y, %H:%M:%S"), project_repo, project_url, project_type, project_state)
 		self.c.execute(req)
 		print("created new project :" + project_name)
 
@@ -28,57 +27,84 @@ class MAD_db():
 		self.conn.commit()
 		return project_id
 
+	def createEntry(self, time_start, time_end, entry_path, project_id):
+		req = 'INSERT INTO entries(time_start, time_end, entry_path, project_id) VALUES(\'%s\',\'%s\',\'%s\',\'%s\')'%(time_start, time_end, entry_path, project_id)		
+		self.c.execute(req)
+		print("created new entry at :" + entry_path)
+		entry_id = self.c.lastrowid
+		self.conn.commit()
+		return entry_id
+
+	def editEntry():
+		pass
+
 	def getProjectRepo(self):
 		pass
 
 	def getUsers(self):
 		pass
 
-	def getProjects(self):
-		self.c.execute('SELECT * FROM projects')
+	def getProjects(self, user_id=None):
+
+		if user_id:
+			self.c.execute('SELECT * FROM projets INNER JOIN usersprojects ON projets.id = usersprojects.projectid WHERE userid = %s'%(user_id))
+		else :
+			self.c.execute('SELECT * FROM projets')
+
 		field_names = [i[0] for i in self.c.description]
 		res = self.c.fetchall()
-		resDict = []
+		resTab = []
 		for p in res :
-			resDict.append({})
-			for i, col in enumerate(field_names) :
-				resDict[-1][col] = p[i]
-			p_id  = resDict[-1]['id']
-			self.c.execute('SELECT users.firstname, users.id FROM users INNER JOIN usersprojects ON users.id = usersprojects.userid WHERE projectid = %s'%(p_id))
-			users = [{'name' : u[0], 'id' : u[1]} for u in self.c.fetchall()]
-			resDict[-1]['users'] = users
+			resTab.append(dict(self.getNiceProjectFields(p, field_names)))
+		return resTab
 
-		return json.dumps(resDict)
-		
+	def getNiceProjectFields(self, row, field_names):
+		resDict = {}
+		for i, col in enumerate(field_names) :
+			resDict[col] = row[i]
+		p_id  = resDict['id']
+		self.c.execute('SELECT utilisateurs.nom, utilisateurs.prenom, utilisateurs.id FROM utilisateurs INNER JOIN usersprojects ON utilisateurs.id = usersprojects.userid WHERE projectid = %s'%(p_id))
+		users = [{'lastname' : u[0], 'firstname':u[1], 'id' : u[2]} for u in self.c.fetchall()]
+		resDict['users'] = users
+		return resDict
+
+	def getProject(self, p_id, entries=False):
+		self.c.execute('SELECT * FROM projets WHERE id = %s'%(p_id))
+		field_names = [i[0] for i in self.c.description]
+		res = self.c.fetchone()
+		resDict = self.getNiceProjectFields(res, field_names)
+		resentries = self.getProjectEntries(p_id)
+		resDict['entries_count'] = len(resentries)
+		if(entries):
+			resDict['entries'] = resentries
+		return dict(resDict)
+
+	def getProjectEntries(self, p_id):
+		self.c.execute('SELECT * FROM entries WHERE project_id = %s'%(p_id))
+		field_names = [i[0] for i in self.c.description]
+		res = self.c.fetchall()
+		resTab = []
+		for p in res :
+			resDict = {}
+			for i, col in enumerate(field_names) :
+				resDict[col] = p[i]
+			resTab.append(resDict)
+		return resTab
+
+	def setProject(self, project_id, field, value):
+		self.c.execute('UPDATE projets SET %s = \'%s\' WHERE id= %s'%(field, value, project_id))
+
+
 	def getProjectPath(self, p_id):
-		self.c.execute('SELECT repo FROM projects WHERE id = %s'%(p_id))
+		self.c.execute('SELECT repo FROM projets WHERE id = %s'%(p_id))
 		res = self.c.fetchone()
 		return str(res[0])
 
 	def getUserNameById(self, user_id):
-		self.c.execute('SELECT firstname FROM users WHERE id = %s'%(user_id))
+		self.c.execute('SELECT nom FROM utilisateurs WHERE id = %s'%(user_id))
 		res = self.c.fetchone()
 		print(type(res))
 		return str(res[0])
 
-
-	def postFileToProject(self, project_id, file):
-		pass
 	def getProjectNameById(self, id):
 		pass
-
-		
-# Create table
-# c.execute('''CREATE TABLE stocks
-#              (date text, trans text, symbol text, qty real, price real)''')
-
-# # Insert a row of data
-# c.execute("INSERT INTO stocks VALUES ('2006-01-05','BUY','RHAT',100,35.14)")
-
-# # Save (commit) the changes
-# conn.commit()
-# for row in c.execute('SELECT * FROM users ORDER BY id'):
-# 	print("row")
-# 	print(row)
-# We can also close the connection if we are done with it.
-# Just be sure any changes have been committed or they will be lost.

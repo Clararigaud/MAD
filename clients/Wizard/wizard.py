@@ -1,12 +1,17 @@
 from tkinter import *
 import pyautogui
 import sys
-sys.path.insert(0,"..") 
+from pathlib import Path
+
+# As PosixPath
+sys.path.append(str(Path(__file__).parent / ".."))
+#sys.path.insert(0,"..") 
 import MAD_client as mc
 from datetime import datetime
 import os, shutil
 import copy
 from tkinter import ttk 
+import time
 # class Screenshot(top) : 
 
 class content_window :
@@ -51,20 +56,19 @@ class Main_menu:
 		self.top.update(self.content)
 			
 	def takeScreenshot(self): 
+		self.top.top.attributes('-alpha', 0) #don't work weird
+		if not os.path.exists('temp'):
+			os.makedirs('temp')
 		emptyDir('temp')
-		self.screenshot = pyautogui.screenshot()
 		now = datetime.now()
+		self.screenshot = pyautogui.screenshot()
 		filename = 'screenshot-%s.png'%(now.strftime("%m%d%Y%H%M%S"))
 		path = 'temp/'+filename
 		self.screenshot.save(path)
+		time.sleep(1)
+		self.top.top.attributes('-alpha', 1)
 		connection.sendFileToProject(self.project['id'], path)
 		emptyDir('temp')
-
-	def loadplayer_callback(self):
-		Player_Choice(self, "Grid_Choice(self.top, self.player)")
-		
-	def quit_callback(self):
-		AskForSave(self.top, self.player)
 
 class Login:
 	def __init__(self, cw):
@@ -114,6 +118,7 @@ class Menubutton(Button):
 
 
 print("welcome to the wizard");
+
 connection = mc.MAD_client()
 
 def emptyDir(folder):
