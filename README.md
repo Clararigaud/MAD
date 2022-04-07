@@ -34,5 +34,5 @@ Currently there are this clients :
 
 ### Capush
 start socket server : python3 [capushserver.py](server/capushserver.py)
-start a test client : node -r esm [socketclienttest.mjs](clients/socketclienttest.mjs)  (needs esm)
+start a test client : node -r esm [socketclienttest.mjs](clients/capush/socketclienttest.mjs)  (needs esm)
 start a manager client on browser: your.local.ip.address:8081/capush
