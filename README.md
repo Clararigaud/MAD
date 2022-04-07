@@ -33,6 +33,6 @@ Currently there are this clients :
 - **[Marcello](clients/bots/Marcello)** : Alphabot2, Clara's repo for her advances on gesture based interaction with the table robot -->
 
 ### Capush
-start socket server : python3 capushserver.py](server/capushserver.py)
-start a test client : node -r esm socketclienttest.mjs  (needs esm)
+start socket server : python3 [capushserver.py](server/capushserver.py)
+start a test client : node -r esm [socketclienttest.mjs](clients/socketclienttest.mjs)  (needs esm)
 start a manager client on browser: your.local.ip.address:8081/capush
