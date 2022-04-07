@@ -8,10 +8,9 @@ This is the architecture client / server of our Affable project
 A config file enable anybody to keep his own setup : see [config.json](config.json)
 
 #### Http Server - Python Bottle - SQLLite
-A Http server can be ran with the [pythonroute.py](server/pythonroute.py) script.
-For now it just make a connection with the relational database and take care of the routes.
+A Http server can be ran with the [main.py](server/main.py) script.
 
-Once running, you can access some pages with the url and ports specified in the **config.json** file like 
+Once running, you can navigate with the url and ports specified in the **config.json** file like 
 > your.local.ip.address:8081/sudoc
 
 Currently there are things in : 
@@ -32,3 +31,8 @@ Currently there are this clients :
 - OLD **[SatanicBot](clients/bots/SatanicBot)** : Alphabot1, Kevin's repo for his advances on robot displacement on a table
 
 - **[Marcello](clients/bots/Marcello)** : Alphabot2, Clara's repo for her advances on gesture based interaction with the table robot -->
+
+### Capush
+start socket server : python3 capushserver.py](server/capushserver.py)
+start a test client : node -r esm socketclienttest.mjs  (needs esm)
+start a manager client on browser: your.local.ip.address:8081/capush

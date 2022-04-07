@@ -3,7 +3,7 @@ import json
 import os,sys,inspect,shutil
 import requests
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-class MAD_client:
+class SuDoc_client:
 	def __init__(self):
 		with open(currentdir+'/../config.json') as json_file:
 			data = json.load(json_file)

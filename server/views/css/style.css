@@ -3,11 +3,46 @@
 }
 
 .main_content{
-	max-width: 800px;
+
+width:	100%;
+	max-width: 1000px;
 	margin: 0 auto;
 }
 
 .list_elem{
 	padding: 10px;
 	border-bottom: 1px solid #555;
+}
+
+header {
+	width:	100%;
+	max-width: 1000px;
+	margin: 0 auto;
+}
+
+#menu ul{
+	margin: 0px;
+	padding: 10px;
+}
+
+#menu ul li{
+	display: inline-block;
+}
+
+
+/*PROJECt LIST*/
+.project_list_elem_title, .project_list_elem_infos{
+	display: inline-block;
+}
+.project_list_elem_title{
+	vertical-align: top;
+}
+.project_list_elem_infos p{
+	font-size: 13px;
+	font-style: italic;
+	margin: 5px;
+}
+.project_list_elem_infos p.project_list_elem_infos_authors{
+	font-size: 15px;
+	font-weight: 800;
 }

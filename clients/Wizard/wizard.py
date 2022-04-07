@@ -6,7 +6,7 @@ from pathlib import Path
 # As PosixPath
 sys.path.append(str(Path(__file__).parent / ".."))
 #sys.path.insert(0,"..") 
-import MAD_client as mc
+import SuDoc_client as mc
 from datetime import datetime
 import os, shutil
 import copy
@@ -94,7 +94,7 @@ class Login:
 	def login(self, project):
 		self.project = copy.deepcopy(project)
 		print("logged to " + str(self.project['name']))
-		fenetre.title("MAD wizard - %s"%(str(self.project['name'])))
+		fenetre.title("Sudoc wizard - %s"%(str(self.project['name'])))
 		Main_menu(self.top, self.project)
 
 	def cbcallback(self, *args):
@@ -119,7 +119,7 @@ class Menubutton(Button):
 
 print("welcome to the wizard");
 
-connection = mc.MAD_client()
+connection = mc.SuDoc_client()
 
 def emptyDir(folder):
 	for filename in os.listdir(folder):
@@ -135,7 +135,7 @@ def emptyDir(folder):
 fenetre = Tk()
 fenetre.geometry("300x400")
 fenetre.configure(background="#fff")
-fenetre.title("MAD wizard")
+fenetre.title("SuDoc wizard")
 content = content_window(fenetre)
 app = Login(content)
 fenetre.mainloop()

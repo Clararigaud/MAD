@@ -3,11 +3,11 @@
 <% 
 	projectusers = []
 	for user in project['users']:
-		projectusers.append('<a href="/sudoc/users/%s">%s %s</a>'%(user['id'], user['firstname'], user['lastname']))
+		projectusers.append('<a href="/sudoc/user?id=%s">%s %s</a>'%(user['id'], user['firstname'], user['lastname']))
 	end
 	users = ', '.join(projectusers)
 %>
-<h1>{{project['name']}}</h1>
+<h2>{{project['name']}}</h2>
 <span> <p> Authors: {{!users}} </p> <span>
 <span>Created: {{project['datecreated']}}</span>
 <span>Last Updated : {{project['dateupdated']}}</span>

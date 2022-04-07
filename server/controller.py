@@ -73,6 +73,12 @@ class SuDoc():
 		db.close()
 		return dict(res)
 
+	def getUser(self, userid):
+		db = dbClient.MAD_db()
+		res = db.getUser(userid)
+		db.close()
+		return res
+
 	def getEntry(self, entry_id):
 		pass
 

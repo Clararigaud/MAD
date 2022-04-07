@@ -44,8 +44,16 @@ class MAD_db():
 	def getUsers(self):
 		pass
 
-	def getProjects(self, user_id=None):
+	def getUser(self, user_id):
+		self.c.execute('SELECT * FROM utilisateurs WHERE utilisateurs.id = %s'%(user_id))
+		res = self.c.fetchone()
+		resDict = {}
+		field_names = [i[0] for i in self.c.description]
+		for i, col in enumerate(field_names) :
+			resDict[col] = res[i]
+		return resDict
 
+	def getProjects(self, user_id=None):
 		if user_id:
 			self.c.execute('SELECT * FROM projets INNER JOIN usersprojects ON projets.id = usersprojects.projectid WHERE userid = %s'%(user_id))
 		else :
