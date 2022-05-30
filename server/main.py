@@ -77,7 +77,8 @@ def sendProject():
         
 with open('../config.json') as json_file:
     data = json.load(json_file)
+    http_server_address = data[0]['bottle-server-address']
     http_server_port = data[0]['bottle-server-port']
     sudoc = controller.SuDoc()
-run(host='0.0.0.0', port=http_server_port)
+run(host=http_server_address, port=http_server_port)
 
