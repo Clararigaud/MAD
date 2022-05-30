@@ -1,0 +1,3 @@
+[submodule "capush"]
+	path = capush
+	url = https://github.com/af-FAB-le/capush
